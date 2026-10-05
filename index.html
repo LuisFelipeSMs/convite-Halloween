@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0710">
+    <title>Halloween Party</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --noite: #0b0710;
+            --roxo: #2a1238;
+            --abobora: #ff7a1a;
+            --sangue: #9e0b0b;
+            --osso: #efe6d2;
+            --pergaminho: #e9dcc0;
+            --tinta: #2b1d14;
+            --verde: #7cff6b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: radial-gradient(ellipse at top, #241032 0%, var(--noite) 60%);
+            background-attachment: fixed;
+            color: var(--osso);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ===== Névoa e morcegos ===== */
+        .nevoa {
+            position: fixed; inset: auto 0 0 0; height: 40vh; pointer-events: none; z-index: 0;
+            background: linear-gradient(to top, rgba(180,170,200,.18), transparent);
+            animation: respirar 8s ease-in-out infinite alternate;
+        }
+        @keyframes respirar { from { opacity: .5; } to { opacity: 1; } }
+
+        .morcego {
+            position: fixed; font-size: 1.8rem; z-index: 1; pointer-events: none;
+            animation: voar linear infinite;
+        }
+        @keyframes voar {
+            0%   { transform: translate(-10vw, 0) scale(.8); }
+            25%  { transform: translate(25vw, -4vh) scale(1); }
+            50%  { transform: translate(55vw, 3vh) scale(.9); }
+            75%  { transform: translate(85vw, -3vh) scale(1.1); }
+            100% { transform: translate(115vw, 0) scale(.8); }
+        }
+
+        /* ===== Raios ===== */
+        .relampago-flash {
+            position: fixed; inset: 0; z-index: 1; pointer-events: none;
+            animation: clarao 6s infinite;
+        }
+        @keyframes clarao {
+            0%, 88%, 90%, 93%, 100% { background: transparent; }
+            89%   { background: rgba(215,205,255,.32); }
+            91.5% { background: rgba(215,205,255,.18); }
+        }
+        .raio {
+            position: fixed; top: 0; z-index: 0; pointer-events: none;
+            width: 60px; height: 200px; opacity: 0;
+            filter: drop-shadow(0 0 10px #d8ccff) drop-shadow(0 0 28px #8f6bff);
+            animation: raio 6s infinite;
+        }
+        @keyframes raio {
+            0%, 88%, 90%, 93%, 100% { opacity: 0; }
+            89%, 91.5% { opacity: 1; }
+        }
+
+        /* ===== Abóboras ===== */
+        .abobora-deco {
+            position: fixed; z-index: 1; pointer-events: none;
+            animation: vela 2.8s ease-in-out infinite;
+        }
+        @keyframes vela {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(255,140,30,.45)); }
+            45% { filter: drop-shadow(0 0 22px rgba(255,160,40,.85)); }
+            55% { filter: drop-shadow(0 0 14px rgba(255,140,30,.6)); }
+        }
+        .abobora-deco.flutua { animation: vela 2.8s ease-in-out infinite, flutuar 4s ease-in-out infinite; }
+
+        /* ===== Lua ===== */
+        .lua {
+            position: fixed; z-index: 0; pointer-events: none;
+            top: calc(10% - 60px); left: calc(80% - 60px); width: 120px; height: 120px;
+            filter: drop-shadow(0 0 30px rgba(255,236,170,.55)) drop-shadow(0 0 80px rgba(255,220,140,.25));
+        }
+
+        /* ===== Intro ===== */
+        #intro {
+            position: fixed; inset: 0; z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle, #1a0b24 0%, #000 80%);
+            padding: 16px; text-align: center;
+        }
+        .intro-content { max-width: 520px; }
+        .intro-icone {
+            font-size: 6rem; display: block; margin-bottom: 1rem;
+            animation: flutuar 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 25px rgba(255,122,26,.6));
+        }
+        @keyframes flutuar { 50% { transform: translateY(-12px); } }
+        #intro h2 {
+            font-family: 'Cinzel', serif; font-weight: 400; font-size: 1.3rem;
+            margin-bottom: 2rem; color: var(--osso);
+        }
+
+        button { font-family: 'Cinzel', serif; cursor: pointer; }
+
+        #openInvite {
+            background: linear-gradient(var(--sangue), #5a0505);
+            color: var(--osso); border: 2px solid #c9a24a;
+            padding: 1rem 2.4rem; font-size: 1.1rem; letter-spacing: 2px;
+            border-radius: 4px; box-shadow: 0 0 25px rgba(158,11,11,.7);
+            transition: transform .2s, box-shadow .2s;
+        }
+        #openInvite:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(255,122,26,.8); }
+
+        /* ===== Convite ===== */
+        main {
+            position: relative; z-index: 2;
+            max-width: 760px; margin: 0 auto; padding: 24px 16px 80px;
+            animation: surgir 1.5s ease;
+        }
+        @keyframes surgir { from { opacity: 0; transform: translateY(30px); } }
+
+        .divSom {
+            position: fixed; top: 12px; right: 12px; z-index: 5;
+            display: flex; gap: 6px;
+            background: rgba(0,0,0,.6); padding: 6px; border-radius: 30px;
+            border: 1px solid rgba(255,122,26,.4);
+        }
+        .divSom button {
+            background: none; border: none; font-size: 1.2rem; padding: 4px 6px;
+        }
+
+        .hero { text-align: center; padding: 60px 0 30px; }
+        .hero .abobora {
+            font-size: 5rem; display: block;
+            animation: brilhar 2.5s ease-in-out infinite;
+        }
+        @keyframes brilhar {
+            50% { filter: drop-shadow(0 0 30px var(--abobora)); transform: scale(1.06); }
+        }
+        .hero h1 {
+            font-family: 'Creepster', cursive; font-weight: 400;
+            font-size: clamp(2.4rem, 8vw, 4.2rem); line-height: 1.1;
+            color: var(--abobora); letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255,122,26,.6), 3px 3px 0 #000;
+            margin: 1rem 0;
+        }
+        .hero h2 {
+            font-family: 'Cinzel', serif; font-weight: 400; font-size: 1.2rem;
+            color: var(--verde); text-shadow: 0 0 10px rgba(124,255,107,.5);
+        }
+
+        .pergaminho {
+            background:
+                radial-gradient(ellipse at center, transparent 55%, rgba(60,30,10,.35) 100%),
+                var(--pergaminho);
+            color: var(--tinta);
+            border-radius: 6px;
+            padding: 2rem 1.6rem;
+            margin: 2rem 0;
+            box-shadow: 0 0 0 2px #6b4b2a, 0 10px 40px rgba(0,0,0,.8), inset 0 0 50px rgba(90,50,20,.35);
+            position: relative;
+        }
+        .pergaminho::before, .pergaminho::after {
+            content: '🕸️'; position: absolute; font-size: 2rem; opacity: .55;
+        }
+        .pergaminho::before { top: -6px; left: -6px; }
+        .pergaminho::after { bottom: -6px; right: -6px; transform: rotate(180deg); }
+
+        .pergaminho h3 {
+            font-family: 'Cinzel', serif; text-align: center; color: #5a0505;
+            font-size: 1.35rem; margin-bottom: 1rem;
+        }
+        .pergaminho p + p { margin-top: .8rem; }
+
+        .detalhes {
+            text-align: center; font-family: 'Cinzel', serif; font-size: 1.05rem;
+            border-top: 1px dashed #6b4b2a; border-bottom: 1px dashed #6b4b2a;
+            padding: 1rem 0; margin-top: 1.2rem;
+        }
+        .aviso { color: var(--sangue); font-weight: 600; }
+
+        /* Pix */
+        .pix {
+            margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px dashed #6b4b2a;
+            display: flex; flex-direction: column; align-items: center; gap: .6rem; text-align: center;
+        }
+        .pix-titulo { font-family: 'Cinzel', serif; font-weight: 700; color: #5a0505; }
+        .pix-qr {
+            width: 200px; height: 200px; background: #fff; padding: 8px;
+            border: 3px solid #6b4b2a; border-radius: 6px;
+        }
+        .pix-qr-vazio {
+            display: flex; align-items: center; justify-content: center;
+            border-style: dashed; color: #6b4b2a; font-family: 'Cinzel', serif; font-size: .9rem;
+        }
+        .pix-rotulo { font-family: 'Cinzel', serif; font-size: .9rem; margin-top: .4rem; }
+        .pix-chave {
+            display: flex; align-items: center; gap: 8px; max-width: 100%;
+            background: #fffaf0; border: 2px solid #6b4b2a; border-radius: 4px; padding: .4rem .4rem .4rem .8rem;
+        }
+        .pix-chave code { font-size: 1rem; overflow-wrap: anywhere; text-align: left; }
+        .pix-chave button {
+            flex-shrink: 0; min-height: 40px; padding: 0 .9rem; border-radius: 4px;
+            background: #1a0b24; color: var(--abobora); border: 2px solid var(--abobora); font-size: .85rem;
+        }
+
+        .mapa-reino { width: 100%; height: 280px; border: 3px solid #6b4b2a; border-radius: 6px; margin: 1rem 0; }
+
+        .botao-mapa, .botao-enviar {
+            display: block; text-align: center; text-decoration: none;
+            background: #1a0b24; color: var(--abobora);
+            border: 2px solid var(--abobora); border-radius: 4px;
+            padding: .9rem; font-family: 'Cinzel', serif; font-size: 1rem; width: 100%;
+            transition: background .2s;
+        }
+        .botao-mapa:hover, .botao-enviar:hover:not(:disabled) { background: #2a1238; }
+        .botao-enviar:disabled { opacity: .6; cursor: not-allowed; }
+
+        /* Fantasias */
+        .classes {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 1rem;
+        }
+        .classe-card {
+            background: rgba(255,255,255,.4); border: 2px solid #6b4b2a; border-radius: 8px;
+            text-align: center; padding: .8rem .3rem; font-size: 2rem; cursor: pointer;
+            transition: transform .15s, background .15s;
+        }
+        .classes.alerta .classe-card { animation: tremer .4s ease-in-out 3; border-color: var(--sangue); }
+        @keyframes tremer { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+        .classe-card span { display: block; font-family: 'Cinzel', serif; font-size: .85rem; }
+        .classe-card:hover { transform: translateY(-3px); }
+        .classe-card.selecionada {
+            background: #1a0b24; color: var(--abobora); border-color: var(--abobora);
+            box-shadow: 0 0 15px rgba(255,122,26,.7);
+        }
+
+        /* Formulário */
+        #nome {
+            width: 100%; padding: .8rem; font-size: 1.1rem; font-family: inherit;
+            border: 2px solid #6b4b2a; border-radius: 4px; background: #fffaf0; margin-top: .6rem;
+        }
+        .decisao-reino { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: .8rem 0; }
+        .botao-missao, .botao-recusa {
+            padding: 1rem .5rem; border-radius: 6px; font-size: .9rem; border: 2px solid;
+            background: transparent; transition: all .2s;
+        }
+        .botao-missao { border-color: #2e6b1f; color: #2e6b1f; }
+        .botao-recusa { border-color: var(--sangue); color: var(--sangue); }
+        .botao-missao.ativo { background: #2e6b1f; color: #fff; }
+        .botao-recusa.ativo { background: var(--sangue); color: #fff; }
+
+        .mensagem-reino {
+            text-align: center; font-family: 'Cinzel', serif; padding: 1rem;
+            background: rgba(0,0,0,.7); border: 1px solid var(--abobora); border-radius: 6px;
+            color: var(--abobora);
+        }
+
+        #listaHerois { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 1rem; }
+        .heroi {
+            background: #1a0b24; color: var(--osso); border-radius: 20px; padding: .3rem .9rem; font-size: 1rem;
+        }
+        #contadorHerois { text-align: center; }
+
+        #rankingClasses { margin-top: 1rem; }
+        .rank-linha { display: flex; align-items: center; gap: 8px; margin: .4rem 0; font-size: 1rem; }
+        .rank-linha .barra { height: 12px; background: var(--abobora); border-radius: 6px; }
+
+        footer { text-align: center; opacity: .6; font-size: 1rem; margin-top: 2rem; }
+
+        @media (max-width: 480px) {
+            .classes { grid-template-columns: repeat(2, 1fr); }
+            .pergaminho { padding: 1.6rem 1.1rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nevoa"></div>
+    <div class="morcego" style="top:12%; animation-duration:14s;">🦇</div>
+    <div class="morcego" style="top:30%; animation-duration:19s; animation-delay:-6s;">🦇</div>
+    <div class="morcego" style="top:55%; animation-duration:23s; animation-delay:-12s;">🦇</div>
+
+    <!-- Desenhos reutilizados: abóbora e raio -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <symbol id="sv-abobora" viewBox="0 0 100 92">
+            <path d="M50 20 Q46 8 55 3" stroke="#3d5a1e" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <ellipse cx="30" cy="54" rx="24" ry="34" fill="#c44f08"/>
+            <ellipse cx="70" cy="54" rx="24" ry="34" fill="#c44f08"/>
+            <ellipse cx="50" cy="54" rx="25" ry="36" fill="#ff7a1a"/>
+            <path d="M27 48 L35 35 L43 48 Z M57 48 L65 35 L73 48 Z M47 58 L50 52 L53 58 Z
+                     M25 64 Q50 88 75 64 L69 66 L65 72 L59 67 L50 74 L41 67 L35 72 L31 66 Z" fill="#ffd34d"/>
+        </symbol>
+        <symbol id="sv-raio" viewBox="0 0 60 200">
+            <path d="M36 0 L14 84 L30 84 L6 200 L52 66 L34 66 L50 0 Z" fill="#f4f0ff"/>
+        </symbol>
+    </svg>
+
+    <svg class="lua" viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+            <radialGradient id="g-lua" cx="40%" cy="38%" r="65%">
+                <stop offset="0" stop-color="#fff8dc"/>
+                <stop offset=".7" stop-color="#f1dfa8"/>
+                <stop offset="1" stop-color="#d9c27f"/>
+            </radialGradient>
+        </defs>
+        <circle cx="60" cy="60" r="56" fill="url(#g-lua)"/>
+        <g fill="#cdb67c" opacity=".55">
+            <circle cx="42" cy="44" r="10"/>
+            <circle cx="76" cy="38" r="6"/>
+            <circle cx="70" cy="76" r="12"/>
+            <circle cx="40" cy="82" r="7"/>
+            <circle cx="88" cy="60" r="5"/>
+        </g>
+    </svg>
+
+    <div class="relampago-flash"></div>
+    <svg class="raio" style="left:7%;"><use href="#sv-raio"/></svg>
+    <svg class="raio" style="right:10%; width:44px; height:150px; animation-duration:13s; animation-delay:-6s;"><use href="#sv-raio"/></svg>
+
+    <svg class="abobora-deco" style="left:2%; bottom:1%; width:96px; height:88px;"><use href="#sv-abobora"/></svg>
+    <svg class="abobora-deco" style="left:calc(2% + 84px); bottom:1%; width:56px; height:52px; animation-delay:-1.2s;"><use href="#sv-abobora"/></svg>
+    <svg class="abobora-deco" style="right:3%; bottom:1.5%; width:78px; height:72px; transform:rotate(6deg); animation-delay:-.6s;"><use href="#sv-abobora"/></svg>
+    <svg class="abobora-deco flutua" style="left:3%; top:42%; width:46px; height:42px; opacity:.85;"><use href="#sv-abobora"/></svg>
+    <svg class="abobora-deco flutua" style="right:4%; top:68%; width:40px; height:37px; opacity:.85; animation-delay:-2s, -1.5s;"><use href="#sv-abobora"/></svg>
+
+    <!-- ===== INTRO ===== -->
+    <div id="intro">
+        <div class="intro-content">
+            <span class="intro-icone">⚰️</span>
+            <h2>🕯️ Um bilhete manchado de cera foi deixado à sua porta por um morcego mensageiro...</h2>
+            <button id="openInvite">Abrir o Caixão</button>
+        </div>
+    </div>
+
+    <!-- ===== CONVITE ===== -->
+    <main id="invite" class="hidden">
+
+        <div class="divSom">
+            <button id="play" title="Tocar">▶️</button>
+            <button id="pause" title="Pausar">⏸️</button>
+            <button id="mute" title="Silenciar">🔇</button>
+            <button id="next" title="Próxima">⏭️</button>
+            <audio id="musica"></audio>
+        </div>
+
+        <section class="hero">
+            <span class="abobora">🎃</span>
+            <h1>A Noite das Almas Perdidas</h1>
+            <h2>🕷️ O véu entre os mundos se abrirá 🕷️</h2>
+        </section>
+
+        <section class="pergaminho">
+            <h3>📜 A Lenda</h3>
+            <p>
+                Conta-se que, uma vez por ano, quando a lua cheia se esconde atrás das nuvens
+                e os sinos badalam à meia-noite, as portas da velha mansão se abrem
+                para receber vivos, mortos e tudo o que há entre eles.
+            </p>
+            <p>
+                Este ano, <b>Lipe e Jotta</b> — Guardião das Abóboras,
+                Senhor das Velas Negras e Colecionador de Almas Perdidas —
+                convoca bruxas, vampiros, lobisomens, fantasmas e demais criaturas da noite
+                para a mais assombrosa celebração do ano.
+            </p>
+
+            <div class="detalhes">
+                🦇 <b>24 de Outubro</b><br>
+                🕯️ 19h — até o primeiro canto do galo<br>
+                🏚️ A casa do Jotta<br>
+                <small>(mais conhecido pelos mortais como R. Aldo Tamancoldi, 61 - Chácara Flora, Petrópolis - RJ, 25635-210)</small>
+            </div>
+        </section>
+
+        <section class="pergaminho">
+            <h3>🧪 Sobre as Poções e Oferendas</h3>
+            <p>
+                <b>Fantasia é muito bem-vinda!</b> Quanto mais assustadora, maior a glória.
+                Mas se vieres em forma humana, ainda assim serás aceito entre as criaturas.
+            </p>
+            <p class="aviso">
+                ⚠️ O Conselho das Trevas pede a cada criatura uma colaboração de <b>R$ 25</b> para a entrada.
+            </p>
+
+            <div class="pix">
+                <p class="pix-titulo">💀 Pague a oferenda via Pix</p>
+                <!-- Salve o QR Code gerado no app do banco como qrcode-pix.png, na mesma pasta -->
+                <img src="qrcode-pix.png" alt="QR Code Pix para a colaboração de R$ 25" class="pix-qr"
+                     onerror="this.replaceWith(Object.assign(document.createElement('div'), {className: 'pix-qr pix-qr-vazio', textContent: 'QR Code Pix'}))">
+                <p class="pix-rotulo">Chave Pix</p>
+                <div class="pix-chave">
+                    <code id="chavePix">3313f9bd-aec6-4ef6-b447-b6b10846195f</code>
+                    <button type="button" id="copiarPix">Copiar</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="pergaminho">
+            <h3>🎲 Os Jogos das Trevas</h3>
+            <p>
+                Durante a noite, as criaturas serão desafiadas em <b>jogos macabros</b>.
+                Cada vitória rende pontos para o <b>conselho da sua criatura</b>:
+                Vampiros, Bruxas, Lobisomens, Fantasmas, Zumbis e Múmias.
+            </p>
+            <p class="aviso">
+                🏆 Ao fim da noite, o conselho com mais pontos será coroado Senhor das Trevas!
+            </p>
+            <p>Escolhei bem vossa forma abaixo: vossa vitória será a glória do vosso conselho.</p>
+        </section>
+
+        <section class="pergaminho">
+            <h3>🗺️ O Caminho até a Mansão</h3>
+            <p>
+                Para que nenhuma alma se perca na névoa, os cartógrafos do além
+                marcaram o caminho exato.
+            </p>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d273.91004770770496!2d-43.17401459325109!3d-22.531195294258307!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x99a789e56ae80b%3A0x5103aa8d46ecb058!2sR.%20Aldo%20Tamancoldi%2C%2061%20-%20Ch%C3%A1cara%20Flora%2C%20Petr%C3%B3polis%20-%20RJ%2C%2025635-210!5e0!3m2!1spt-BR!2sbr!4v1791172026124!5m2!1spt-BR!2sbr"
+                class="mapa-reino" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            <a href="https://www.google.com/maps/search/?api=1&query=R.+Aldo+Tamancoldi,+61+-+Ch%C3%A1cara+Flora,+Petr%C3%B3polis+-+RJ,+25635-210" target="_blank" class="botao-mapa">
+                
+                🕯️ Abrir o Caminho no Google Maps 🕯️
+            </a>
+        </section>
+
+        <section class="pergaminho">
+            <h3>💀 Confirmai vossa presença!<br>Que criatura sereis nesta noite?</h3>
+            <p>Escolhei vossa forma para que o Necromante registre vossa alma no Livro dos Mortos.</p>
+
+            <div class="classes">
+                <div class="classe-card" data-classe="Vampiro">🧛<span>Vampiro</span></div>
+                <div class="classe-card" data-classe="Bruxa">🧙‍♀️<span>Bruxa</span></div>
+                <div class="classe-card" data-classe="Lobisomem">🐺<span>Lobisomem</span></div>
+                <div class="classe-card" data-classe="Fantasma">👻<span>Fantasma</span></div>
+                <div class="classe-card" data-classe="Zumbi">🧟<span>Zumbi</span></div>
+                <div class="classe-card" data-classe="Múmia">🩻<span>Múmia</span></div>
+            </div>
+        </section>
+
+        <section class="pergaminho">
+            <h3>🩸 Assinar o Pacto</h3>
+            <p>Escrevei vosso nome com tinta (ou sangue) para entrar no Livro dos Mortos.</p>
+
+            <form id="rsvpForm">
+                <input type="text" id="nome" placeholder="Vosso nome mortal" required>
+
+                <p style="margin-top:1rem;">Agora, escolhei vosso destino:</p>
+                <div class="decisao-reino">
+                    <button type="button" id="aceitarMissao" class="botao-missao">
+                        🎃<br>EU IREI ASSOMBRAR
+                    </button>
+                    <button type="button" id="recusarMissao" class="botao-recusa">
+                        ⚰️<br>FICAREI NA TUMBA
+                    </button>
+                </div>
+
+                <button type="submit" class="botao-enviar" id="btnRegistrar" disabled>
+                    🕸️ FAÇA VOSSA ESCOLHA ACIMA 🕸️
+                </button>
+            </form>
+        </section>
+
+        <div id="mensagemReino" class="mensagem-reino hidden"></div>
+
+        <section class="pergaminho">
+            <h3>👻 Almas Confirmadas</h3>
+            <p id="contadorHerois">🕯️ Nenhuma alma respondeu ao chamado ainda 🕯️</p>
+            <div id="listaHerois"></div>
+        </section>
+
+        <section class="pergaminho">
+            <h3>🔮 Conselho das Trevas</h3>
+            <div id="painelReino"><p>Nenhuma criatura registrada ainda.</p></div>
+            <div id="rankingClasses"></div>
+        </section>
+
+        <footer>🎃 Feliz Halloween 🎃</footer>
+    </main>
+
+    <script>
+        /* ===== Música (coloque os .mp3 na mesma pasta) ===== */
+        const listaMusicas = ['sigmamusicart-halloween-background-music-425891.mp3'];
+        let musicasRestantes = [...listaMusicas];
+        const audio = document.getElementById('musica');
+
+        function proximaMusica() {
+            if (musicasRestantes.length === 0) musicasRestantes = [...listaMusicas];
+            const i = Math.floor(Math.random() * musicasRestantes.length);
+            audio.src = musicasRestantes.splice(i, 1)[0];
+        }
+        function tocar() {
+            if (!audio.getAttribute('src')) proximaMusica();
+            audio.play().catch(() => {});
+        }
+
+        document.getElementById('play').onclick = tocar;
+        document.getElementById('pause').onclick = () => audio.pause();
+        document.getElementById('mute').onclick = (e) => {
+            audio.muted = !audio.muted;
+            e.currentTarget.textContent = audio.muted ? '🔊' : '🔇';
+        };
+        document.getElementById('next').onclick = () => { proximaMusica(); tocar(); };
+        audio.addEventListener('ended', () => { proximaMusica(); tocar(); });
+
+        /* ===== Abrir convite ===== */
+        document.getElementById('openInvite').onclick = () => {
+            document.getElementById('intro').classList.add('hidden');
+            document.getElementById('invite').classList.remove('hidden');
+            tocar();
+        };
+
+        /* ===== Copiar chave Pix ===== */
+        document.getElementById('copiarPix').onclick = async (e) => {
+            const btn = e.currentTarget;
+            const chave = document.getElementById('chavePix').textContent.trim();
+            try {
+                await navigator.clipboard.writeText(chave);
+                btn.textContent = 'Copiada!';
+            } catch {
+                // Navegadores antigos: seleciona o texto para a pessoa copiar
+                const sel = window.getSelection();
+                sel.selectAllChildren(document.getElementById('chavePix'));
+                btn.textContent = 'Selecionada';
+            }
+            setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+        };
+
+        /* ===== RSVP =====
+           As confirmações vão para uma Google Planilha (código em apps-script.gs).
+           Cole abaixo a URL do App da Web. Enquanto estiver vazia,
+           a lista fica salva só neste navegador, para testes. */
+        const URL_PLANILHA = 'https://script.google.com/macros/s/AKfycbyPA32nfHC-PEfW10ToFQZrSTuLHCgg3dSeKJBG1Q09yOpuhKHvT_eH_WbMa945uO0P/exec';
+        const CHAVE = 'halloween_rsvp';
+        let registros = [];
+        let classeEscolhida = null;
+        let decisao = null;
+
+        const btnRegistrar = document.getElementById('btnRegistrar');
+        const btnAceitar = document.getElementById('aceitarMissao');
+        const btnRecusar = document.getElementById('recusarMissao');
+
+        document.querySelectorAll('.classe-card').forEach(card => {
+            card.onclick = () => {
+                document.querySelectorAll('.classe-card').forEach(c => c.classList.remove('selecionada'));
+                card.classList.add('selecionada');
+                classeEscolhida = card.dataset.classe;
+            };
+        });
+
+        function escolher(valor) {
+            decisao = valor;
+            btnAceitar.classList.toggle('ativo', valor === 'sim');
+            btnRecusar.classList.toggle('ativo', valor === 'nao');
+            btnRegistrar.disabled = false;
+            btnRegistrar.textContent = valor === 'sim'
+                ? '🩸 SELAR O PACTO 🩸'
+                : '⚰️ ENVIAR MINHAS DESCULPAS ⚰️';
+        }
+        btnAceitar.onclick = () => escolher('sim');
+        btnRecusar.onclick = () => escolher('nao');
+
+        function lerLocal() {
+            try { return JSON.parse(localStorage.getItem(CHAVE)) || []; } catch { return []; }
+        }
+
+        async function carregarRegistros() {
+            if (!URL_PLANILHA) { registros = lerLocal(); renderizar(); return; }
+            try {
+                const resp = await fetch(URL_PLANILHA);
+                registros = await resp.json();
+                renderizar();
+            } catch {
+                document.getElementById('contadorHerois').textContent =
+                    '🕯️ Os espíritos não trouxeram a lista agora. Tente recarregar a página. 🕯️';
+            }
+        }
+
+        async function salvarRegistro(reg) {
+            if (!URL_PLANILHA) {
+                const lista = lerLocal();
+                lista.push(reg);
+                try { localStorage.setItem(CHAVE, JSON.stringify(lista)); } catch {}
+                return;
+            }
+            // Corpo em texto puro: a Google aceita sem bloqueio de CORS
+            const resp = await fetch(URL_PLANILHA, { method: 'POST', body: JSON.stringify(reg) });
+            const res = await resp.json();
+            if (!res.ok) throw new Error('falha ao salvar');
+        }
+
+        function renderizar() {
+            // Se a mesma pessoa responder mais de uma vez, vale a última resposta
+            const porNome = new Map();
+            registros.forEach(r => porNome.set(String(r.nome).trim().toLowerCase(), r));
+            const lista = [...porNome.values()];
+            const vao = lista.filter(r => r.decisao === 'sim');
+            const contador = document.getElementById('contadorHerois');
+            const listaEl = document.getElementById('listaHerois');
+
+            contador.textContent = vao.length
+                ? `🕯️ ${vao.length} ${vao.length === 1 ? 'alma confirmada' : 'almas confirmadas'} 🕯️`
+                : '🕯️ Nenhuma alma respondeu ao chamado ainda 🕯️';
+
+            listaEl.innerHTML = '';
+            vao.forEach(r => {
+                const s = document.createElement('span');
+                s.className = 'heroi';
+                s.textContent = `${r.nome}${r.classe ? ' · ' + r.classe : ''}`;
+                listaEl.appendChild(s);
+            });
+
+            const painel = document.getElementById('painelReino');
+            const ranking = document.getElementById('rankingClasses');
+            const recusas = lista.length - vao.length;
+            painel.innerHTML = lista.length
+                ? `<p>🎃 Vão assombrar: <b>${vao.length}</b> &nbsp;|&nbsp; ⚰️ Ficarão na tumba: <b>${recusas}</b></p>`
+                : '<p>Nenhuma criatura registrada ainda.</p>';
+
+            const contagem = {};
+            vao.forEach(r => { if (r.classe) contagem[r.classe] = (contagem[r.classe] || 0) + 1; });
+            const max = Math.max(1, ...Object.values(contagem));
+            ranking.innerHTML = '';
+            Object.entries(contagem).sort((a, b) => b[1] - a[1]).forEach(([classe, n]) => {
+                const linha = document.createElement('div');
+                linha.className = 'rank-linha';
+                const nomeEl = document.createElement('span');
+                nomeEl.style.width = '90px';
+                nomeEl.textContent = classe;
+                const barra = document.createElement('div');
+                barra.className = 'barra';
+                barra.style.width = `${(n / max) * 60}%`;
+                const qtd = document.createElement('b');
+                qtd.textContent = n;
+                linha.append(nomeEl, barra, qtd);
+                ranking.appendChild(linha);
+            });
+        }
+
+        document.getElementById('rsvpForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const nome = document.getElementById('nome').value.trim();
+            if (!nome || !decisao) return;
+
+            const msg = document.getElementById('mensagemReino');
+
+            // Quem vai precisa escolher a criatura; quem não vai, não
+            if (decisao === 'sim' && !classeEscolhida) {
+                msg.classList.remove('hidden');
+                msg.textContent = '🎃 Antes de selar o pacto, escolhei vossa criatura acima!';
+                const classes = document.querySelector('.classes');
+                classes.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                classes.classList.add('alerta');
+                setTimeout(() => classes.classList.remove('alerta'), 1600);
+                return;
+            }
+            const textoBotao = btnRegistrar.textContent;
+            btnRegistrar.disabled = true;
+            btnRegistrar.textContent = '🕯️ ENVIANDO AOS ESPÍRITOS... 🕯️';
+
+            const reg = { nome, classe: decisao === 'sim' ? classeEscolhida : null, decisao };
+            try {
+                await salvarRegistro(reg);
+            } catch {
+                msg.classList.remove('hidden');
+                msg.textContent = '💀 Os espíritos não receberam vossa resposta. Tente de novo em instantes.';
+                btnRegistrar.disabled = false;
+                btnRegistrar.textContent = textoBotao;
+                return;
+            }
+
+            msg.classList.remove('hidden');
+            msg.textContent = decisao === 'sim'
+                ? `🩸 O pacto foi selado, ${nome}! Te esperamos na noite de 24 de Outubro... 🦇`
+                : `⚰️ Que pena, ${nome}. Tua ausência será sentida pelos espíritos. 👻`;
+
+            registros.push(reg);
+            e.target.reset();
+            classeEscolhida = null; decisao = null;
+            document.querySelectorAll('.classe-card').forEach(c => c.classList.remove('selecionada'));
+            btnAceitar.classList.remove('ativo'); btnRecusar.classList.remove('ativo');
+            btnRegistrar.textContent = '🕸️ FAÇA VOSSA ESCOLHA ACIMA 🕸️';
+            renderizar();
+            msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        };
+
+        carregarRegistros();
+        // Atualiza a lista a cada 30 segundos para mostrar quem confirmou depois
+        setInterval(carregarRegistros, 30000);
+    </script>
+</body>
+</html>
